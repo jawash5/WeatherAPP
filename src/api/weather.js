@@ -1,5 +1,6 @@
 import service from "../util/request";
 import axios from "axios";
+
 const key = 'b5d7b2b35d56477c9b68c901ae632048'
 
 export function getLocation(cityName) {
