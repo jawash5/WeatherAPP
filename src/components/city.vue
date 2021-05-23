@@ -8,6 +8,12 @@
     </template>
     <el-form label-width="auto">
       <el-row :gutter="20">
+        <el-col :span="24">
+          <span class="saying">每日毒鸡汤：{{ saying }}</span>
+        </el-col>
+      </el-row>
+      <el-divider></el-divider>
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="天气：">
             <span>{{ weather['text'] }}</span>
@@ -54,7 +60,8 @@
 </template>
 
 <script lang="ts">
-import {ref, reactive} from "vue";
+import {ref, reactive, toRefs} from "vue";
+import {getSaying} from '../api/weather.js'
 
 export default {
   name: 'city',
@@ -64,7 +71,15 @@ export default {
       required: true
     }
   },
-  setup() {
+  /*
+    以下会消除响应式
+    setup({weather}) {
+      // 但是你可以使用reactive或ref在对非响应式的weather进行包装
+      const WeatherData = reactive(weather)
+    }
+   */
+  setup(props) {
+    const {weather} = toRefs(props) // 此时weather是个ref对象
     const dialogVisible = ref(false);
     const weatherMap = reactive({
       obsTime: '观测时间',
@@ -82,9 +97,19 @@ export default {
       cloud: "云量",
       dew: "露点温度"
     })
+    const saying = ref('')
+
+    const getComment = () => {
+      getSaying().then(res => {
+        saying.value = res.data.data.title
+      })
+    }
+    getComment()
+
     return {
       dialogVisible,
-      weatherMap
+      weatherMap,
+      saying
     }
   }
 }
@@ -99,5 +124,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.saying {
+  font-size: 14px;
+  opacity: .7;
 }
 </style>

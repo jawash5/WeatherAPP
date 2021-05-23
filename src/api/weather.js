@@ -14,6 +14,10 @@ export function getLocation(cityName) {
     })
 }
 
+export function getSaying() {
+  return axios.get('https://v1.alapi.cn/api/soul',)
+}
+
 export function getWeather(params) {
   return service.request({
     method: 'get',
