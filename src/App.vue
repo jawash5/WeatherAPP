@@ -9,7 +9,7 @@
             suffix-icon="el-icon-search"></el-input>
       </el-form-item>
     </el-form>
-    <suspense>
+    <suspense v-if="conformCityName">
       <template #default>
         <city :weather="cityWeather">
           <span v-if="conformCityName">{{ conformCityName }}</span>
@@ -28,8 +28,8 @@
 </template>
 
 <script lang="ts">
-import {reactive, ref, defineAsyncComponent} from 'vue'
-import {getLocation, getWeather} from "./api/weather.js";
+import {reactive, ref, defineAsyncComponent, provide} from 'vue'
+import {getLocation, getWeather, getWeather3d} from "./api/weather.js";
 import {ElNotification} from 'element-plus';
 
 export default {
@@ -47,10 +47,10 @@ export default {
       text: "XX",
       windScale: "X",
     })
+    const cityWeather3d = ref({})
     const conformCityName = ref('')
 
     const validateCity = (rule: object, value: string, callback: (err?: Error) => void) => {
-      console.log(rule)
       if (value === '') {
         callback(new Error('请输入城市名称'));
       } else if (/[0-9]/.test(value)) {
@@ -84,6 +84,10 @@ export default {
                   getWeather({location: locationId})
                       .then(res2 => {
                         cityWeather.value = res2['now']
+                        return getWeather3d({location: locationId})
+                      })
+                      .then(res3 => {
+                        cityWeather3d.value = res3['daily']
                       })
                 }
               })
@@ -92,6 +96,9 @@ export default {
         }
       })
     }
+
+    provide('cityWeather3d', cityWeather3d)
+
     return {
       cityData,
       cityWeather,

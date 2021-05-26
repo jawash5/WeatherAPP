@@ -25,3 +25,11 @@ export function getWeather(params) {
     params
   })
 }
+
+export function getWeather3d(params) {
+  return service.request({
+    method: 'get',
+    url: '/weather/3d',
+    params
+  })
+}

@@ -12,7 +12,7 @@
           <span class="saying">每日毒鸡汤：{{ saying }}</span>
         </el-col>
       </el-row>
-      <el-divider></el-divider>
+      <el-divider style="margin: 12px 0"></el-divider>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="天气：">
@@ -56,15 +56,21 @@
         </template>
       </el-dialog>
     </teleport>
+    <el-divider style="margin: 12px 0"></el-divider>
+    <forecast></forecast>
   </el-card>
 </template>
 
 <script lang="ts">
 import {ref, reactive, toRefs} from "vue";
 import {getSaying} from '../api/weather.js'
+import forecast from './forecast.vue'
 
 export default {
   name: 'city',
+  components:{
+    forecast
+  },
   props: {
     weather: {
       type: Object,
@@ -116,6 +122,10 @@ export default {
 </script>
 
 <style scoped>
+.el-form-item {
+  margin-bottom: 0;
+}
+
 .box-card {
   width: 400px;
 }
